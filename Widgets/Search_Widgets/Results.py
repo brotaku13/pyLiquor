@@ -2,32 +2,72 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from Widgets.LiquorDetails import LiquorDetails
+from Widgets.LiquorDetails import SearchLiquorDetails
 from Widgets.LiquorView import LiquorView
+from Widgets.Search_Widgets.LiquorViewItem import LiquorViewItem
+
 
 class Results(QWidget):
+    
+    back_to_search = pyqtSignal()
 
     def __init__(self, parent=None):
         super(Results, self).__init__(parent)
 
-        self._details_view = LiquorDetails()
+        self._details_view = SearchLiquorDetails()
         self._liquor_view = LiquorView(["Name"])
+        
 
         self._button_back = QPushButton("Back")
-        self._add_to_cabinet = QPushButton("Add to Cabinet")
+        self._button_back.clicked.connect(self.on_back_clicked)
+
+        self._details_view.add_to_cabinet.connect(self.add_item_to_cabinet)
 
         self.define_layout()
 
-    def populate(self, search_args):
+    def on_back_clicked(self):
+        self.back_to_search.emit()
+
+    def populate(self, data_handler, search_args):
+        self.clear_tree()
+
         if search_args == 'wine':
-            pass
+            for entry in data_handler.get_wine():
+                item = LiquorViewItem(entry['ID'],
+                                        entry['Name'].replace('\'', ''),
+                                        entry['Maker'],
+                                        entry['Category'], 
+                                        entry['Sub_Category'], 
+                                        entry['Sub_Sub_Category'],
+                                        entry['Sub_Sub_Sub_Category'],
+                                        float(entry['Cost']),
+                                        float(entry['Volume(ml)']),
+                                        float(entry['Alcohol_By_Volume']),
+                                        entry['Aroma'],
+                                        entry['Color'],
+                                        entry['Origin'],
+                                        entry['Region'])
+                item.setText(0, item.get_name().title())
+                self._liquor_view.addTopLevelItem(item)
+        
         # etc....
+
+    @pyqtSlot()
+    def add_item_to_cabinet(self):
+        liquor_to_add = self._liquor_view.selectedItems()
+        for item in liquor_to_add:
+            print(item)
+        # : returns QTreeWidgetItem
+
+    def clear_tree(self):
+        for i in reversed(range(self._liquor_view.childCount())):
+            parent.removeChild(self._liquor_view.child(i))
 
     def define_layout(self):
         left = QVBoxLayout()
         button_bar = QHBoxLayout()
         button_bar.addWidget(self._button_back)
-        button_bar.addWidget(self._add_to_cabinet)
+        button_bar.setAlignment(Qt.AlignLeft)
 
         left.addWidget(self._liquor_view)
         left.addLayout(button_bar)
@@ -36,6 +76,7 @@ class Results(QWidget):
 
         layout.addLayout(left)
         layout.addWidget(self._details_view)
+        layout.setContentsMargins(0, 0, 0, 11)
         self.setLayout(layout)
 
 

@@ -2,6 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+
 class LiquorView(QTreeWidget):
 
     def __init__(self, categories, parent=None):
@@ -10,6 +11,5 @@ class LiquorView(QTreeWidget):
         self.setColumnCount(len(categories))
         self.setMaximumWidth(500)
         self.setSortingEnabled(True)
+        self.sortByColumn(0, Qt.AscendingOrder)
         self.setHeaderLabels(categories)
-
-

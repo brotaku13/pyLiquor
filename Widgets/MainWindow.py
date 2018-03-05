@@ -7,21 +7,24 @@ from Widgets.Search import Search
 
 import sys
 
+
 class MainWindow(QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, data_handler, parent=None):
         super(QWidget, self).__init__(parent)
         self.resize(950, 500)
         self.setWindowTitle("pyCohol")
 
-        #central Widget is a stacked Widget
+        self._data_handler = data_handler
+        # central Widget is a stacked Widget
         self._app_stack = QStackedWidget()
 
-        self._cabinet_page = Cabinet()
+        self._cabinet_page = Cabinet(self._data_handler)
         self._cabinet_page.setObjectName("cabinet")
         self._app_stack.addWidget(self._cabinet_page)
 
-        self._search = Search()
+
+        self._search = Search(self._data_handler)
         self._search.setObjectName("search")
         self._app_stack.addWidget(self._search)
         self._app_stack.setCurrentIndex(1)
@@ -36,6 +39,7 @@ class MainWindow(QWidget):
         self._button_cabinet.setMaximumWidth(200)
         self._button_cabinet.setSizePolicy(button_size_policy)
         self._button_cabinet.clicked.connect(lambda: self.switch_page(0))
+        
 
         self._button_search = QPushButton("Search")
         self._button_search.setObjectName("button_search")
@@ -44,13 +48,13 @@ class MainWindow(QWidget):
         self._button_search.setSizePolicy(button_size_policy)
         self._button_search.clicked.connect(lambda: self.switch_page(1))
 
-        self._button_recipe = QPushButton("Recipes")
-        self._button_recipe.setObjectName("button_recipes")
-        self._button_recipe.setMaximumHeight(80)
-        self._button_recipe.setMaximumWidth(200)
-        self._button_recipe.setSizePolicy(button_size_policy)
+        # self._button_recipe = QPushButton("Recipes")
+        # self._button_recipe.setObjectName("button_recipes")
+        # self._button_recipe.setMaximumHeight(80)
+        # self._button_recipe.setMaximumWidth(200)
+        # self._button_recipe.setSizePolicy(button_size_policy)
 
-        #self.define_stylesheets()
+        # self.define_stylesheets()
         self.define_layout()
 
 
@@ -61,7 +65,7 @@ class MainWindow(QWidget):
 
         grid.addWidget(self._button_cabinet, 0, 0)
         grid.addWidget(self._button_search, 1, 0)
-        grid.addWidget(self._button_recipe, 2, 0)
+        #grid.addWidget(self._button_recipe, 2, 0)
 
         spacer = QSpacerItem(20, 50, QSizePolicy.Minimum, QSizePolicy.Preferred)
         grid.addItem(spacer, 3, 0, -1, -1)
@@ -75,21 +79,8 @@ class MainWindow(QWidget):
     def switch_page(self, index):
         self._app_stack.setCurrentIndex(index)
 
-    def define_stylesheets(self):
-        self.setStyleSheet("""
-        QStackedWidget {
-            background-color: rgb(82, 103, 117)
-        }
-        QPushButton {
-            background-color: rgb(82, 103, 117)
-        }
-        """)
 
-
-
-
-
-app = QApplication(sys.argv)
-mainWindow = MainWindow()
-mainWindow.show()
-sys.exit(app.exec_())
+# app = QApplication(sys.argv)
+# mainWindow = MainWindow()
+# mainWindow.show()
+# sys.exit(app.exec_())

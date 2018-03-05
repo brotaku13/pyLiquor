@@ -63,16 +63,16 @@ class Home(QWidget):
             button.setMaximumHeight(100)
             button.setSizePolicy(button_size_policy)
 
-        self._label_search = QLabel("Search")
         self._search_box = QLineEdit()
+        self._search_box.returnPressed.connect(lambda: self.on_choose_action(self._search_box.text()))
         self._search_box.setPlaceholderText("Search")
         self._search_box.setMaximumWidth(400)
 
         self.define_layout()
 
-    #emit signal
-    def on_choose_action(self, sender):
-        self.search_action.emit(sender)
+    # emit signal
+    def on_choose_action(self, search_args):
+        self.search_action.emit(search_args)
 
     def define_layout(self):
 

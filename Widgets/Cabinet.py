@@ -2,25 +2,26 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from Widgets.LiquorDetails import LiquorDetails
+from Widgets.LiquorDetails import CabinetLiquorDetails
 from Widgets.LiquorView import LiquorView
+
 
 class Cabinet(QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, data_handler, parent=None):
         super(Cabinet, self).__init__(parent)
 
         self._radiobutton_current = QRadioButton("Current")
         self._radiobutton_all = QRadioButton("All")
 
         self._collection_view = LiquorView(["Name", "Type", "Amount"])
-        self._details_view = LiquorDetails()
+        self._details_view = CabinetLiquorDetails()
 
         self.define_layout()
 
     def define_layout(self):
         layout_cabinet = QHBoxLayout()
-        layout_cabinet.setContentsMargins(0, 0, 11, 20)
+        layout_cabinet.setContentsMargins(11, 0, 11, 20)
 
 
         layout_filter_buttons = QHBoxLayout()
