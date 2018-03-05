@@ -11,7 +11,7 @@ import csv
 
 def get_ids(skus, link, num):
     try:
-        driver = webdriver.Chrome('chromedriver.exe')
+        driver = webdriver.Chrome()
         filters = "#k=#s=" + str(num)
         driver.get(link + filters)
         driver.implicitly_wait(10)
@@ -36,9 +36,12 @@ def get_ids(skus, link, num):
     except:
         print(f"Error: Link {link} rotation {num}.")
 
+
+
+
 def make_csv(skus):
     retry_skus = []
-    with open("beer_sprits.csv", "w", newline='') as csvfile:
+    with open("wine.csv", "w", newline='') as csvfile:
         fieldnames = ["ID", "Name", "Maker", "Category", "Sub_Category", "Sub_Sub_Category", "Sub_Sub_Sub_Category"
             , "Cost", "Volume(ml)", "Alcohol_By_Volume", "Aroma", "Color", "Deposit", "Origin", "Region"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -122,7 +125,7 @@ def make_csv(skus):
     retry_csv(retry_skus)
 
 def retry_csv(retry_skus):
-    with open("beer_sprits1.csv", "a", newline='') as csvfile:
+    with open("wine1.csv", "a", newline='') as csvfile:
         fieldnames = ["ID", "Name", "Maker", "Category", "Sub_Category", "Sub_Sub_Category", "Sub_Sub_Sub_Category"
             , "Cost", "Volume(ml)", "Alcohol_By_Volume", "Aroma", "Color", "Deposit", "Origin", "Region"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -199,8 +202,8 @@ def main():
     skus = []
     # gets all the category hyperlinks
     cats = soup.find_all("div", id="Value")
-# editted just to get the beer and spirits
-    for i in range(2, len(cats)-5):
+# editted just to get the wines
+    for i in range(1, len(cats)-7):
         cat_link = "http://www.liquorconnect.com" + cats[i].find('a').get("href")
         print(cat_link)
 
@@ -209,6 +212,13 @@ def main():
         for j in range(19, count, 18):
             time.sleep(2)
             get_ids(skus, cat_link, j)
+        # count = int(get_ids(skus, cat_link, 1))
+        # for j in range(19, count, 18):
+        #     if(((j - 1) / 18) % 10 == 0):
+        #         time.sleep(60)
+        #     else:
+        #         time.sleep(2)
+        #     get_ids(skus, cat_link, j)
 
     # makes the csv
     make_csv(skus)
