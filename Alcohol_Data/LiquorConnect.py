@@ -10,37 +10,42 @@ import json
 import csv
 
 def get_ids(skus, link, num):
+    try:
+        driver = webdriver.Chrome()
+        filters = "#k=#s=" + str(num)
+        driver.get(link + filters)
+        driver.implicitly_wait(10)
+        wait = WebDriverWait(driver, 10)
 
-    driver = webdriver.Chrome()
-    filters = "#k=#s=" + str(num)
-    driver.get(link + filters)
-    driver.implicitly_wait(10)
-    wait = WebDriverWait(driver, 10)
+        # gets the total count of the items in the category
+        wait.until(EC.visibility_of_all_elements_located((By.XPATH, """// *[ @ id = "ResultCount"]""")))
+        count = 0
+        if(num == 1):
+            count = driver.find_element_by_xpath("""// *[ @ id = "ResultCount"]""").text.strip().split()[1].replace(',', '')
 
-    # gets the total count of the items in the category
-    wait.until(EC.visibility_of_all_elements_located((By.XPATH, """// *[ @ id = "ResultCount"]""")))
-    count = driver.find_element_by_xpath("""// *[ @ id = "ResultCount"]""").text.strip().split()[1].replace(',', '')
+        wait.until(EC.visibility_of_all_elements_located((By.XPATH, """//*[@id="ctl00_ctl45_g_f2cab01e_feaa_4fe0_947e_9c95ba8bebdb_csr1_groupContent"]""")))
+        wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "productItem")))
+        sku_drivers = driver.find_elements_by_class_name("productItem")
 
-    sku_drivers = driver.find_elements_by_class_name("productItem")
+        for j in sku_drivers:
+            id = j.find_element_by_tag_name('a').get_attribute("href").split("SKU=")[-1]
+            skus.append(id)
 
-    for j in sku_drivers:
-        id = j.get_attribute("id")
-        skus.append(id)
-
-    driver.quit()
-
-    return count
+        driver.quit()
+        return count
+    except:
+        print(f"Error: Link {link} rotation {num}.")
 
 def make_csv(skus):
-    with open("alcohol_data.csv", "w", newline='') as csvfile:
+    retry_skus = []
+    with open("beer_sprits.csv", "w", newline='') as csvfile:
         fieldnames = ["ID", "Name", "Maker", "Category", "Sub_Category", "Sub_Sub_Category", "Sub_Sub_Sub_Category"
             , "Cost", "Volume(ml)", "Alcohol_By_Volume", "Aroma", "Color", "Deposit", "Origin", "Region"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
-        retry_skus = []
         for i in range(len(skus)):
-            time.sleep(1)
+            time.sleep(2)
             try:
                 url = "http://www.liquorconnect.com/Products/_vti_bin/iomer.LC.WcfServices/Products.svc/GetProduct?sku=" + skus[i]
                 r1 = requests.get(url)
@@ -114,15 +119,16 @@ def make_csv(skus):
         #     else:
         #         print(f"{key}: {value}")
 
+    retry_csv(retry_skus)
+
 def retry_csv(retry_skus):
-    with open("alcohol_data.csv", "a", newline='') as csvfile:
+    with open("beer_sprits1.csv", "a", newline='') as csvfile:
         fieldnames = ["ID", "Name", "Maker", "Category", "Sub_Category", "Sub_Sub_Category", "Sub_Sub_Sub_Category"
             , "Cost", "Volume(ml)", "Alcohol_By_Volume", "Aroma", "Color", "Deposit", "Origin", "Region"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-        retry_skus = []
         for i in range(len(retry_skus)):
-            time.sleep(1)
+            time.sleep(2)
             try:
                 url = "http://www.liquorconnect.com/Products/_vti_bin/iomer.LC.WcfServices/Products.svc/GetProduct?sku=" + retry_skus[i]
                 r1 = requests.get(url)
@@ -184,11 +190,8 @@ def retry_csv(retry_skus):
             except:
                 print(f"Error: Unable to get data for {retry_skus[i]}.")
 
-
-
-
 def main():
-
+    start_time = time.time()
     # the main page of the site
     r = requests.get("http://www.liquorconnect.com/Pages/default.aspx")
     soup = BeautifulSoup(r.content, "lxml")
@@ -196,18 +199,21 @@ def main():
     skus = []
     # gets all the category hyperlinks
     cats = soup.find_all("div", id="Value")
-    for i in range(1, len(cats)-1):
+# editted just to get the beer and spirits
+    for i in range(2, len(cats)-5):
         cat_link = "http://www.liquorconnect.com" + cats[i].find('a').get("href")
         print(cat_link)
 
         # runs through all of the pages per category and gets all the skus/ids
         count = int(get_ids(skus, cat_link, 1))
-        for j in range(19, 36, 18):
+        for j in range(19, count, 18):
             time.sleep(2)
             get_ids(skus, cat_link, j)
 
     # makes the csv
     make_csv(skus)
+
+    print(f"Run time of program in seconds {time.time() - start_time}")
 
 if __name__ == "__main__":
     main()
