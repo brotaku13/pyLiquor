@@ -11,7 +11,7 @@ import csv
 
 def get_ids(skus, link, num):
     try:
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome('chromedriver.exe')
         filters = "#k=#s=" + str(num)
         driver.get(link + filters)
         driver.implicitly_wait(10)
