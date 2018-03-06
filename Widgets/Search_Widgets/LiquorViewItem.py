@@ -33,6 +33,9 @@ class LiquorViewItem(QTreeWidgetItem):
     
     def get_maker(self):
         return self._maker
+    
+    def get_category(self):
+        return self._category
 
     def get_sub_category(self):
         return self._sub_category
@@ -49,7 +52,7 @@ class LiquorViewItem(QTreeWidgetItem):
     def get_volume(self):
         return self._volume
 
-    def get_alcohol_by_volume(self):
+    def get_abv(self):
         return self._alcohol_by_volume
 
     def get_aroma(self):
