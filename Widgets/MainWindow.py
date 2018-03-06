@@ -12,7 +12,7 @@ class MainWindow(QWidget):
 
     def __init__(self, data_handler, parent=None):
         super(QWidget, self).__init__(parent)
-        self.resize(950, 500)
+        self.resize(1200, 500)
         self.setWindowTitle("pyCohol")
 
         self._data_handler = data_handler

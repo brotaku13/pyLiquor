@@ -11,17 +11,16 @@ class LiquorDetails(QWidget):
 
     def __init__(self, parent=None):
         super(LiquorDetails, self).__init__(parent)
-        self.setMaximumWidth(300)
 
         self._button_buy = QPushButton("Buy Near Me")
         
         self._name = QLabel("Liquor Name here")
-        font_name = QFont("Helvetica", 20, 3)
+        font_name = QFont("Helvetica", 16, 3)
         self._name.setFont(font_name)
         self._name.setWordWrap(True)
         self._name.setAlignment(Qt.AlignCenter)
 
-        font_details = QFont("Helvetica", 14, 2)
+        font_details = QFont("Helvetica", 12, 1)
         self._maker = QLabel("makers name")
         self._category = QLabel("Category here in [], []\n[], [] format")
         self._origin = QLabel("Origin: []")
