@@ -18,7 +18,6 @@ class Results(QWidget):
         self._liquor_view = LiquorView(["Name"])
         self._liquor_view.currentItemChanged.connect(self.update_details)
         
-
         self._button_back = QPushButton("Back")
         self._button_back.clicked.connect(self.on_back_clicked)
 
@@ -27,15 +26,15 @@ class Results(QWidget):
         self.define_layout()
 
     def on_back_clicked(self):
+        #self.clear_tree()
         self.back_to_search.emit()
 
     def update_details(self, current_liquor_item: LiquorViewItem):
-        #self._details_view.update_ui(current_liquor_item)
-        pass
+        if current_liquor_item is not None:
+            self._details_view.update_ui(current_liquor_item)
 
     def populate(self, data_handler, search_args):
         self.clear_tree()
-
         if search_args == 'wine':
             for entry in data_handler.get_wine():
                 item = LiquorViewItem(entry['ID'],
@@ -54,8 +53,6 @@ class Results(QWidget):
                                         entry['Region'])
                 item.setText(0, item.get_name().title())
                 self._liquor_view.addTopLevelItem(item)
-        
-        # etc....
 
     @pyqtSlot()
     def add_item_to_cabinet(self):

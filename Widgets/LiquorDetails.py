@@ -3,6 +3,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from collections import OrderedDict
 import webbrowser
+import math
+
 
 
 class LiquorDetails(QWidget):
@@ -13,15 +15,15 @@ class LiquorDetails(QWidget):
         super(LiquorDetails, self).__init__(parent)
         
         self._button_buy = QPushButton("Buy Near Me")
-        self._button_buy.clicked.connect(self.near_me)
-
+        self._button_buy.clicked.connect(self.near_me)    
+        
         self._name = QLabel("Liquor Name here")
-        font_name = QFont("Helvetica", 20, 3)
+        font_name = QFont("Helvetica", 16, 3)
         self._name.setFont(font_name)
         self._name.setWordWrap(True)
         self._name.setAlignment(Qt.AlignCenter)
 
-        font_details = QFont("Helvetica", 14, 2)
+        font_details = QFont("Helvetica", 12, 1)
         self._maker = QLabel("makers name")
         self._category = QLabel("Category here in [], []\n[], [] format")
         self._origin = QLabel("Origin: []")
@@ -35,26 +37,30 @@ class LiquorDetails(QWidget):
         for label in self.labels:
             label.setFont(font_details)
 
+
     def near_me(self):
         self.new_search = NearMe()
         self.new_search.setGeometry(QRect(1100,600,400,200))
         self.new_search.show()
 
 
+    def is_nan(self, x):
+        return isinstance(x, float) and math.isnan(x)
+
+
     def set_name(self, name):
         self._name.setText(name)
 
     def set_maker(self, maker):
-        if maker != '':
-            self._maker.show()
+        if maker != '' and not self.is_nan(maker):
             self._maker.setText(maker)
         else:
-            self._maker.hide()
-
+            self._maker.setText('')
+    
     def set_category(self, *args):
         categories = OrderedDict()
         for word in args:
-            if word.lower() != 'other' and word.lower() != 'none' and word != '':
+            if not self.is_nan(word) and word.lower() != 'other' and word.lower() != 'none' and word != '':
                 categories[word] = word
         temp = ''
         for i, key in enumerate(list(categories)):
@@ -69,46 +75,52 @@ class LiquorDetails(QWidget):
         self._category.setText(temp)
     
     def set_origin(self, origin):
-        if origin != '':
-            self._origin.show()
+        if origin != '' and not self.is_nan(origin):
             self._origin.setText('Origin: {}'.format(origin))
         else:
-            self._origin.hide()
+            self._origin.setText('Origin: ')
     
     def set_region(self, region):
-        if region != '':
-            self._region.show()
+        if region != '' and not self.is_nan(region):
             self._region.setText('Region: {}'.format(region))
         else:
-            self._region.hide()
+            self._region.setText('Region: ')
     
     def set_volume(self, volume):
-        if volume != '':
-            self._volume.show()
-            self._volume.setText('Volume (ml): {}'.format(volume))
+        if volume != '' and not self.is_nan(volume):
+            self._volume.setText('Volume (ml): {:.2f}ml'.format(volume))
         else:
-            self._volume.hide()
+            self._volume.setText('Volume (ml): ')
     
     def set_abv(self, abv):
-        if abv != '':
-            self._abv.show()
+        if abv != '' and not self.is_nan(abv):
             self._abv.setText('ABV%: {}'.format(abv))
         else:
-            self._abv.hide()
+            self._abv.setText('ABV%: ')
     
     def set_aroma(self, aroma):
-        if aroma != '':
-            self._aroma.show()
+        if aroma != '' and not self.is_nan(aroma):
             self._aroma.setText('Aroma: {}'.format(aroma))
         else:
-            self._aroma.hide()
+            self._aroma.setText('Aroma: ')
 
     def set_color(self, color):
-        if color != '':
-            self._color.show()
-            self.color.setText('Color: {}'.format(color))
+        if color != '' and not self.is_nan(color):
+            self._color.setText('Color: {}'.format(color))
         else:
-            self._color.hide()
+            self._color.setText('Color: ')
+    
+    def update_ui(self, liquor):
+        self.set_name(liquor.get_name())
+        self.set_maker(liquor.get_maker())
+        self.set_category(liquor.get_category(), liquor.get_sub_category(), 
+                            liquor.get_sub_sub_category(), liquor.get_sub_sub_sub_category())
+        self.set_origin(liquor.get_origin())
+        self.set_region(liquor.get_region())
+        self.set_volume(liquor.get_volume())
+        self.set_abv(liquor.get_abv())
+        self.set_aroma(liquor.get_aroma())
+        self.set_color(liquor.get_color())
             
 
 class SearchLiquorDetails(LiquorDetails):
