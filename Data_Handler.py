@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 
 
-
 class Data_Handler():
     def __init__(self):
         self.hi = "Hi"

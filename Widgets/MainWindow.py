@@ -29,7 +29,6 @@ class MainWindow(QWidget):
         self._app_stack.addWidget(self._search)
         self._app_stack.setCurrentIndex(1)
 
-
         # buttons
         button_size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         button_size_policy.setHorizontalStretch(1)
@@ -65,7 +64,7 @@ class MainWindow(QWidget):
 
         grid.addWidget(self._button_cabinet, 0, 0)
         grid.addWidget(self._button_search, 1, 0)
-        #grid.addWidget(self._button_recipe, 2, 0)
+        # grid.addWidget(self._button_recipe, 2, 0)
 
         spacer = QSpacerItem(20, 50, QSizePolicy.Minimum, QSizePolicy.Preferred)
         grid.addItem(spacer, 3, 0, -1, -1)

@@ -16,6 +16,7 @@ class Results(QWidget):
 
         self._details_view = SearchLiquorDetails()
         self._liquor_view = LiquorView(["Name"])
+        self._liquor_view.currentItemChanged.connect(self.update_details)
         
 
         self._button_back = QPushButton("Back")
@@ -27,6 +28,10 @@ class Results(QWidget):
 
     def on_back_clicked(self):
         self.back_to_search.emit()
+
+    def update_details(self, current_liquor_item: LiquorViewItem):
+        #self._details_view.update_ui(current_liquor_item)
+        pass
 
     def populate(self, data_handler, search_args):
         self.clear_tree()
@@ -60,8 +65,8 @@ class Results(QWidget):
         # : returns QTreeWidgetItem
 
     def clear_tree(self):
-        for i in reversed(range(self._liquor_view.childCount())):
-            parent.removeChild(self._liquor_view.child(i))
+        for i in reversed(range(self._liquor_view.topLevelItemCount())):
+            self._liquor_view.takeTopLevelItem(i) 
 
     def define_layout(self):
         left = QVBoxLayout()

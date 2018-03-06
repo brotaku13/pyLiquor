@@ -15,6 +15,7 @@ class Cabinet(QWidget):
         self._radiobutton_all = QRadioButton("All")
 
         self._collection_view = LiquorView(["Name", "Type", "Amount"])
+        
         self._details_view = CabinetLiquorDetails()
 
         self.define_layout()
