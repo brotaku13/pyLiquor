@@ -2,7 +2,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from collections import OrderedDict
+import webbrowser
 import math
+
 
 
 class LiquorDetails(QWidget):
@@ -11,8 +13,9 @@ class LiquorDetails(QWidget):
 
     def __init__(self, parent=None):
         super(LiquorDetails, self).__init__(parent)
-
+        
         self._button_buy = QPushButton("Buy Near Me")
+        self._button_buy.clicked.connect(self.near_me)    
         
         self._name = QLabel("Liquor Name here")
         font_name = QFont("Helvetica", 16, 3)
@@ -34,8 +37,16 @@ class LiquorDetails(QWidget):
         for label in self.labels:
             label.setFont(font_details)
 
+
+    def near_me(self):
+        self.new_search = NearMe()
+        self.new_search.setGeometry(QRect(1100,600,400,200))
+        self.new_search.show()
+
+
     def is_nan(self, x):
         return isinstance(x, float) and math.isnan(x)
+
 
     def set_name(self, name):
         self._name.setText(name)
@@ -155,3 +166,34 @@ class CabinetLiquorDetails(LiquorDetails):
         layout.addWidget(self._button_buy)
 
         self.setLayout(layout)
+
+class NearMe(QWidget):
+        def __init__(self, parent = None):
+            super(NearMe, self).__init__(parent)
+            self.define_layout()
+
+        def define_layout(self):
+            self.pop_up = QVBoxLayout()
+            self.drop_down = QComboBox()
+            self.text = QLabel("What would you like to search for?")
+            self.drop_down.addItems(["Liquor Store", "Grocery Store", "Wine", "Other"])
+            self.button_search = QPushButton("Search Maps")
+            self.button_search.clicked.connect(self.search_maps)
+            self.pop_up.addWidget(self.text)
+            self.pop_up.addWidget(self.drop_down)
+            self.pop_up.addWidget(self.button_search)
+            self.setLayout(self.pop_up)
+            self.setWindowTitle("Search Near Me")
+            
+        def search_maps(self):
+            go = True
+            entry = self.drop_down.currentText()
+            if entry == "Other":
+                user, ok = QInputDialog.getText(self, "Search Entry", "Enter your search:")
+                if ok:
+                    entry = user
+                else:
+                    go = False
+            if go:
+                url = 'google.com/maps/search/' + entry.lower() + '/'
+                webbrowser.open(url, new=2)    
