@@ -16,7 +16,7 @@ class Data_Handler():
         self._coolers = pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._sake= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._cider= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
-
+    # made a comment
     # Return all beers in new variable
     # self._temp['Category'] gives you beers/spirits need a way ti filter out spirits
     # More efficient to sort if called upon.
