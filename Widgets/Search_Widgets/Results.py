@@ -38,6 +38,24 @@ class Results(QWidget):
         if search_args == 'wine':
             for entry in data_handler.get_wine():
                 self._liquor_view.addTopLevelItem(entry)
+        elif search_args == 'beer':
+            for entry in data_handler.get_beer():
+                self._liquor_view.addTopLevelItem(entry)
+        elif search_args == 'spirits':
+            for entry in data_handler.get_spirits():
+                self._liquor_view.addTopLevelItem(entry)
+        elif search_args == 'coolers':
+            for entry in data_handler.get_coolers():
+                self._liquor_view.addTopLevelItem(entry)
+        elif search_args == 'cider':
+            for entry in data_handler.get_cider():
+                self._liquor_view.addTopLevelItem(entry)
+        elif search_args == 'liqueur':
+            for entry in data_handler.get_liqour():
+                self._liquor_view.addTopLevelItem(entry)
+        elif search_args == 'sake':
+            for entry in data_handler.get_sake():
+                self._liquor_view.addTopLevelItem(entry)
 
     @pyqtSlot()
     def add_item_to_cabinet(self):

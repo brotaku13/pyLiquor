@@ -24,22 +24,22 @@ class Data_Handler():
     def get_beer(self):
         self._beer = (self._beer.loc[self._beer["Category"] == "BEER"])
         for index, item in self._beer.iterrows():
-            yield item
+            yield self.make_object(item)
 
     def get_spirits(self):
         self._spirits = (self._spirits.loc[self._spirits["Category"] == "SPIRITS"])
         for index, item in self._spirits.iterrows():
-            yield item
+            yield self.make_object(item)
             
     def get_coolers(self):
         self._coolers = (self._coolers.loc[self._coolers["Category"] == "COOLER"])
         for index, item in self._coolers.iterrows():
-            yield item
+            yield self.make_object(item)
 
     def get_cider(self):
         self._cider = (self._cider.loc[self._cider["Category"] == "CIDER"])
         for index, item in self._cider.iterrows():
-            yield item
+            yield self.make_object(item)
 
     # Can format here instead of other place it was used at.
     # It will print faster and suggested.
@@ -52,13 +52,13 @@ class Data_Handler():
     def get_liqour(self):
         self._liqour = (self._liqour.loc[self._liqour["Category"] == "LIQUEUR"])
         for index, item in self._liqour.iterrows():
-            yield item
+            yield self.make_object(item)
 
     # Sake is labled Spirit -- Sake or other -- Sake
     def get_sake(self):
         self._sake = (self._sake.loc[self._sake["Category"] == "SAKE"])
         for index, item in self._sake.iterrows():
-            yield item
+            yield self.make_object(item)
 
     def make_object(self, entry):
         item = LiquorViewItem(entry['ID'],

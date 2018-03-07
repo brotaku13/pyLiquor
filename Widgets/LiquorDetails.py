@@ -194,4 +194,5 @@ class NearMe(QWidget):
                     go = False
             if go:
                 url = 'google.com/maps/search/' + entry.lower() + '/'
-                webbrowser.open(url, new=2)    
+                browser = webbrowser.get('google-chrome')
+                browser.open(url, new=2)    
