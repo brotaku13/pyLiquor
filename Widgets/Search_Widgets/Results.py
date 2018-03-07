@@ -37,22 +37,7 @@ class Results(QWidget):
         self.clear_tree()
         if search_args == 'wine':
             for entry in data_handler.get_wine():
-                item = LiquorViewItem(entry['ID'],
-                                        entry['Name'].replace('\'', ''),
-                                        entry['Maker'],
-                                        entry['Category'], 
-                                        entry['Sub_Category'], 
-                                        entry['Sub_Sub_Category'],
-                                        entry['Sub_Sub_Sub_Category'],
-                                        float(entry['Cost']),
-                                        float(entry['Volume(ml)']),
-                                        float(entry['Alcohol_By_Volume']),
-                                        entry['Aroma'],
-                                        entry['Color'],
-                                        entry['Origin'],
-                                        entry['Region'])
-                item.setText(0, item.get_name().title())
-                self._liquor_view.addTopLevelItem(item)
+                self._liquor_view.addTopLevelItem(entry)
 
     @pyqtSlot()
     def add_item_to_cabinet(self):

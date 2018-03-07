@@ -43,10 +43,8 @@ class LiquorDetails(QWidget):
         self.new_search.setGeometry(QRect(1100,600,400,200))
         self.new_search.show()
 
-
     def is_nan(self, x):
         return isinstance(x, float) and math.isnan(x)
-
 
     def set_name(self, name):
         self._name.setText(name)

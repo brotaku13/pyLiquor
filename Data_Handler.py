@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import csv
-#import LiquorView
+from Widgets.Search_Widgets.LiquorViewItem import LiquorViewItem
 
 
 class Data_Handler():
@@ -16,6 +16,7 @@ class Data_Handler():
         self._coolers = pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._sake= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._cider= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
+
     # made a comment
     # Return all beers in new variable
     # self._temp['Category'] gives you beers/spirits need a way ti filter out spirits
@@ -44,7 +45,7 @@ class Data_Handler():
     # It will print faster and suggested.
     def get_wine(self):
         for index, item in self._wine.iterrows():
-            yield item
+            yield self.make_object(item)
 
     # Doesn't have correct csv format, no data output
     # Liqueur is labled Spirit -- Liqour or other -- Liqour
@@ -52,8 +53,27 @@ class Data_Handler():
         self._liqour = (self._liqour.loc[self._liqour["Category"] == "LIQUEUR"])
         for index, item in self._liqour.iterrows():
             yield item
+
     # Sake is labled Spirit -- Sake or other -- Sake
     def get_sake(self):
         self._sake = (self._sake.loc[self._sake["Category"] == "SAKE"])
         for index, item in self._sake.iterrows():
             yield item
+
+    def make_object(self, entry):
+        item = LiquorViewItem(entry['ID'],
+                                        entry['Name'].replace('\'', ''),
+                                        entry['Maker'],
+                                        entry['Category'], 
+                                        entry['Sub_Category'], 
+                                        entry['Sub_Sub_Category'],
+                                        entry['Sub_Sub_Sub_Category'],
+                                        float(entry['Cost']),
+                                        float(entry['Volume(ml)']),
+                                        float(entry['Alcohol_By_Volume']),
+                                        entry['Aroma'],
+                                        entry['Color'],
+                                        entry['Origin'],
+                                        entry['Region'])
+        item.setText(0, item.get_name().title())
+        return item
