@@ -16,6 +16,7 @@ class Data_Handler():
         self._coolers = pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._sake= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._cider= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
+        
 
     # made a comment
     # Return all beers in new variable
@@ -29,7 +30,7 @@ class Data_Handler():
     def get_spirits(self):
         self._spirits = (self._spirits.loc[self._spirits["Category"] == "SPIRITS"])
         for index, item in self._spirits.iterrows():
-            yield self.make_object(item)
+            yield self.make_object(item, "search_result")
             
     def get_coolers(self):
         self._coolers = (self._coolers.loc[self._coolers["Category"] == "COOLER"])
@@ -52,15 +53,18 @@ class Data_Handler():
     def get_liqour(self):
         self._liqour = (self._liqour.loc[self._liqour["Category"] == "LIQUEUR"])
         for index, item in self._liqour.iterrows():
-            yield self.make_object(item)
+            yield self.make_object(item, "search_result")
 
     # Sake is labled Spirit -- Sake or other -- Sake
     def get_sake(self):
         self._sake = (self._sake.loc[self._sake["Category"] == "SAKE"])
         for index, item in self._sake.iterrows():
             yield self.make_object(item)
-
-    def make_object(self, entry):
+        
+    def make_object(self, entry, entry_type: str):
+        additional_fields = []
+        if entry_type == "search_result":
+            additional_fields = ["sub_category"]
         item = LiquorViewItem(entry['ID'],
                                         entry['Name'].replace('\'', ''),
                                         entry['Maker'],
@@ -76,4 +80,20 @@ class Data_Handler():
                                         entry['Origin'],
                                         entry['Region'])
         item.setText(0, item.get_name().title())
+        column_index = 1
+        if "maker" in additional_fields:
+            item.setText(column_index, item.get_maker().title())
+            column_index += 1
+        if "category" in additional_fields:
+            item.setText(column_index, item.get_category().title())
+            column_index += 1
+        if "sub_category" in additional_fields:
+            item.setText(column_index, item.get_sub_category().title())
+            column_index += 1
+        if "sub_sub_category" in additional_fields:
+            item.setText(column_index, item.get_sub_sub_category().title())
+            column_index += 1
+        if "sub_sub_sub_category" in additional_fields:
+            item.setText(column_index, item.get_sub_sub_sub_category().title())
+            column_index += 1
         return item

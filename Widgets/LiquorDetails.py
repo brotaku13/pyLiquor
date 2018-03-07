@@ -16,6 +16,7 @@ class LiquorDetails(QWidget):
         
         self._button_buy = QPushButton("Buy Near Me")
         self._button_buy.clicked.connect(self.near_me)    
+        self.setMaximumWidth(300)
         
         self._name = QLabel("Liquor Name here")
         font_name = QFont("Helvetica", 16, 3)
@@ -123,7 +124,6 @@ class LiquorDetails(QWidget):
 
 class SearchLiquorDetails(LiquorDetails):
     def __init__(self):
-        
         self._button_add_to_cabinet = QPushButton("Add to Cabinet")
         self._button_add_to_cabinet.clicked.connect(self.add_selection)
         super(SearchLiquorDetails, self).__init__()
@@ -195,4 +195,4 @@ class NearMe(QWidget):
             if go:
                 url = 'google.com/maps/search/' + entry.lower() + '/'
                 browser = webbrowser.get('google-chrome')
-                browser.open(url, new=2)    
+                browser.open(url, new=2)

@@ -15,7 +15,8 @@ class Results(QWidget):
         super(Results, self).__init__(parent)
 
         self._details_view = SearchLiquorDetails()
-        self._liquor_view = LiquorView(["Name"])
+        self._liquor_view = LiquorView(["Name", "type"])
+        self._liquor_view.setColumnWidth(0, 400)
         self._liquor_view.currentItemChanged.connect(self.update_details)
         
         self._button_back = QPushButton("Back")
@@ -56,7 +57,6 @@ class Results(QWidget):
         elif search_args == 'sake':
             for entry in data_handler.get_sake():
                 self._liquor_view.addTopLevelItem(entry)
-
     @pyqtSlot()
     def add_item_to_cabinet(self):
         liquor_to_add = self._liquor_view.selectedItems()
