@@ -17,6 +17,7 @@ class MainWindow(QWidget):
 
         self._data_handler = data_handler
 
+
         self._app_stack = QStackedWidget()
 
         self._cabinet_page = Cabinet(self._data_handler)
@@ -47,6 +48,16 @@ class MainWindow(QWidget):
         self._button_search.setSizePolicy(button_size_policy)
         self._button_search.clicked.connect(lambda: self.switch_page(1))
 
+        # self._button_recipe = QPushButton("Recipes")
+        # self._button_recipe.setObjectName("button_recipes")
+        # self._button_recipe.setMaximumHeight(80)
+        # self._button_recipe.setMaximumWidth(200)
+        # self._button_recipe.setSizePolicy(button_size_policy)
+
+        # self.define_stylesheets()
+        self.define_layout()
+
+
     def define_layout(self):
 
         grid = QGridLayout()
@@ -67,3 +78,9 @@ class MainWindow(QWidget):
 
     def switch_page(self, index):
         self._app_stack.setCurrentIndex(index)
+
+
+# app = QApplication(sys.argv)
+# mainWindow = MainWindow()
+# mainWindow.show()
+# sys.exit(app.exec_())
