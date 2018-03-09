@@ -16,6 +16,7 @@ class Data_Handler():
         self._coolers = pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._sake= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._cider= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
+        self._cabinet = pd.read_csv('Alcohol_Data/cabinet.csv')
         
 
     # made a comment
@@ -59,6 +60,10 @@ class Data_Handler():
     def get_sake(self):
         self._sake = (self._sake.loc[self._sake["Category"] == "SAKE"])
         for index, item in self._sake.iterrows():
+            yield self.make_object(item, "search_result")
+
+    def get_cabinet(self):
+        for index, item in self._cabinet.iterrows():
             yield self.make_object(item, "search_result")
         
     def make_object(self, entry, entry_type: str):
