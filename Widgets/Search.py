@@ -12,7 +12,7 @@ class Search(QWidget):
         super(Search, self).__init__(parent)
         self._data_handler = data_handler
         self._search_apps = QStackedWidget()
-
+        
         self._home = Home()
         self._home.search_action.connect(self.search)
         self._search_apps.addWidget(self._home)

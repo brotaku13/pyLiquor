@@ -25,7 +25,7 @@ class Data_Handler():
     def get_beer(self):
         self._beer = (self._beer.loc[self._beer["Category"] == "BEER"])
         for index, item in self._beer.iterrows():
-            yield self.make_object(item)
+            yield self.make_object(item, "search_result")
 
     def get_spirits(self):
         self._spirits = (self._spirits.loc[self._spirits["Category"] == "SPIRITS"])
@@ -35,18 +35,18 @@ class Data_Handler():
     def get_coolers(self):
         self._coolers = (self._coolers.loc[self._coolers["Category"] == "COOLER"])
         for index, item in self._coolers.iterrows():
-            yield self.make_object(item)
+            yield self.make_object(item, "search_result")
 
     def get_cider(self):
         self._cider = (self._cider.loc[self._cider["Category"] == "CIDER"])
         for index, item in self._cider.iterrows():
-            yield self.make_object(item)
+            yield self.make_object(item, "search_result")
 
     # Can format here instead of other place it was used at.
     # It will print faster and suggested.
     def get_wine(self):
         for index, item in self._wine.iterrows():
-            yield self.make_object(item)
+            yield self.make_object(item, "search_result")
 
     # Doesn't have correct csv format, no data output
     # Liqueur is labled Spirit -- Liqour or other -- Liqour
@@ -59,7 +59,7 @@ class Data_Handler():
     def get_sake(self):
         self._sake = (self._sake.loc[self._sake["Category"] == "SAKE"])
         for index, item in self._sake.iterrows():
-            yield self.make_object(item)
+            yield self.make_object(item, "search_result")
         
     def make_object(self, entry, entry_type: str):
         additional_fields = []

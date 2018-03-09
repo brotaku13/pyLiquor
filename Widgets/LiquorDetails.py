@@ -6,7 +6,6 @@ import webbrowser
 import math
 
 
-
 class LiquorDetails(QWidget):
     
     add_to_cabinet = pyqtSignal()
@@ -17,7 +16,7 @@ class LiquorDetails(QWidget):
         self._button_buy = QPushButton("Buy Near Me")
         self._button_buy.clicked.connect(self.near_me)    
         self.setMaximumWidth(300)
-        
+
         self._name = QLabel("Liquor Name here")
         font_name = QFont("Helvetica", 16, 3)
         self._name.setFont(font_name)
@@ -133,6 +132,7 @@ class SearchLiquorDetails(LiquorDetails):
         self.add_to_cabinet.emit()
         
     def define_layout(self):
+        
         layout = QVBoxLayout()
         layout.addWidget(self._name)
         for widget in self.labels:
