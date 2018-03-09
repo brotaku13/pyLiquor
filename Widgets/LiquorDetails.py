@@ -14,8 +14,9 @@ class LiquorDetails(QWidget):
         super(LiquorDetails, self).__init__(parent)
         
         self._button_buy = QPushButton("Buy Near Me")
-        self._button_buy.clicked.connect(self.near_me)    
-        self.setMaximumWidth(300)
+        self._button_buy.clicked.connect(self.near_me)
+        self.setMaximumWidth(250)
+        self.setSizePolicy(QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred))
 
         self._name = QLabel("Liquor Name here")
         font_name = QFont("Helvetica", 16, 3)
@@ -165,8 +166,9 @@ class CabinetLiquorDetails(LiquorDetails):
 
         self.setLayout(layout)
 
+
 class NearMe(QWidget):
-        def __init__(self, parent = None):
+        def __init__(self, parent=None):
             super(NearMe, self).__init__(parent)
             self.define_layout()
 

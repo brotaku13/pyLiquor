@@ -9,7 +9,6 @@ class LiquorView(QTreeWidget):
         super(LiquorView, self).__init__(parent)
         self.setColumnCount(len(categories))
         self.resizeColumnToContents(0)
-        self.setMinimumWidth(500)
         self.setSortingEnabled(True)
         self.sortByColumn(0, Qt.AscendingOrder)
         self.setHeaderLabels(categories)

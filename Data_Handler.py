@@ -16,9 +16,8 @@ class Data_Handler():
         self._coolers = pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._sake= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
         self._cider= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
-        self._cabinet = pd.read_csv('Alcohol_Data/cabinet.csv')
         
-
+        
     # made a comment
     # Return all beers in new variable
     # self._temp['Category'] gives you beers/spirits need a way ti filter out spirits
@@ -63,13 +62,17 @@ class Data_Handler():
             yield self.make_object(item, "search_result")
 
     def get_cabinet(self):
+        self._cabinet = pd.read_csv('Alcohol_Data/cabinet.csv')
         for index, item in self._cabinet.iterrows():
-            yield self.make_object(item, "search_result")
+            yield self.make_object(item, "cabinet")
         
     def make_object(self, entry, entry_type: str):
         additional_fields = []
         if entry_type == "search_result":
             additional_fields = ["sub_category"]
+        elif entry_type == "cabinet":
+            additional_fields = ["sub_category", "quantity"]
+
         item = LiquorViewItem(entry['ID'],
                                         entry['Name'].replace('\'', ''),
                                         entry['Maker'],
@@ -86,6 +89,7 @@ class Data_Handler():
                                         entry['Region'])
         item.setText(0, item.get_name().title())
         column_index = 1
+
         if "maker" in additional_fields:
             item.setText(column_index, item.get_maker().title())
             column_index += 1
@@ -93,12 +97,19 @@ class Data_Handler():
             item.setText(column_index, item.get_category().title())
             column_index += 1
         if "sub_category" in additional_fields:
-            item.setText(column_index, item.get_sub_category().title())
-            column_index += 1
+            try:
+                item.setText(column_index, item.get_sub_category().title())
+                column_index += 1
+            except:
+                print("something went wrong")
         if "sub_sub_category" in additional_fields:
             item.setText(column_index, item.get_sub_sub_category().title())
             column_index += 1
         if "sub_sub_sub_category" in additional_fields:
             item.setText(column_index, item.get_sub_sub_sub_category().title())
             column_index += 1
+        if "quantity" in additional_fields:
+            item.setText(column_index, str(entry["Quantity"]))
+            column_index += 1
+
         return item

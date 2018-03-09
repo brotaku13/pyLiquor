@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import csv
 
+
 class Results(QWidget):
     
     back_to_search = pyqtSignal()

@@ -4,26 +4,38 @@ from PyQt5.QtWidgets import *
 
 from Widgets.LiquorDetails import CabinetLiquorDetails
 from Widgets.LiquorView import LiquorView
+from Widgets.Search_Widgets import LiquorViewItem
 
 
 class Cabinet(QWidget):
 
     def __init__(self, data_handler, parent=None):
         super(Cabinet, self).__init__(parent)
-
+        self._data_handler = data_handler
         self._radiobutton_current = QRadioButton("Current")
         self._radiobutton_all = QRadioButton("All")
-
-        self._collection_view = LiquorView(["Name", "Type", "Amount"])
-        
+        self._collection_view = LiquorView(["Name", "Type", "Quantity"])
+        self._collection_view.currentItemChanged.connect(self.update_details)
+        self._collection_view.setColumnWidth(0, 325)
         self._details_view = CabinetLiquorDetails()
-
         self.define_layout()
+
+    def update_details(self, current_liquor_item: LiquorViewItem):
+        if current_liquor_item is not None:
+            self._details_view.update_ui(current_liquor_item)
+
+    def populate(self):
+        self.clear_tree()
+        for entry in self._data_handler.get_cabinet():
+            self._collection_view.addTopLevelItem(entry)
+    
+    def clear_tree(self):
+        for i in reversed(range(self._collection_view.topLevelItemCount())):
+            self._collection_view.takeTopLevelItem(i) 
 
     def define_layout(self):
         layout_cabinet = QHBoxLayout()
         layout_cabinet.setContentsMargins(11, 0, 11, 20)
-
 
         layout_filter_buttons = QHBoxLayout()
         layout_filter_buttons.addWidget(self._radiobutton_current)
