@@ -5,7 +5,10 @@ from PyQt5.QtWidgets import *
 from Widgets.LiquorDetails import SearchLiquorDetails
 from Widgets.LiquorView import LiquorView
 from Widgets.Search_Widgets.LiquorViewItem import LiquorViewItem
-
+from Data_Handler import Data_Handler
+import pandas as pd
+import numpy as np
+import csv
 
 class Results(QWidget):
     
@@ -59,10 +62,44 @@ class Results(QWidget):
                 self._liquor_view.addTopLevelItem(entry)
     @pyqtSlot()
     def add_item_to_cabinet(self):
-        liquor_to_add = self._liquor_view.selectedItems()
-        for item in liquor_to_add:
-            print(item)
-        # : returns QTreeWidgetItem
+        file_name = 'Alcohol_Data/cabinet.csv'
+        liquor = self._liquor_view.currentItem()
+        found = False
+        data_handler = Data_Handler()
+        user_cabinet = data_handler.get_cabinet()
+        for item in user_cabinet:
+            if liquor.get_id() == item.get_id():
+                found = True
+                with open(file_name, 'r', newline='') as file:
+                    self._cab = pd.read_csv(file)
+                    counter = 0
+                    for elem in self._cab['ID']:
+                        if elem != liquor.get_id():
+                            counter += 1
+                        else:
+                            break
+
+                    temp_quant = int(self._cab['Quantity'][counter]) + 1
+                    #self._cab.loc[:,('Quantity',counter)] = temp_quant
+                    temp_df = pd.DataFrame({'Quantity': [temp_quant]}, index=[counter])
+                    self._cab.update(temp_df)                 
+                    # reader = csv.DictReader(file)
+                    # headers = reader.fieldnames
+                    # for row in reader:
+                    #     print(liquor.get_id())
+                    #     print(row['ID'])
+                    #     if liquor.get_id() == int(row['ID']):
+                    #         temp = int(row['Quantity'])
+        if found:
+            with open(file_name, 'w', newline='') as file:
+                self._cab.to_csv(file, index=False)
+
+        else:
+            with open(file_name, 'a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([liquor.get_id(), liquor.get_name(), liquor.get_maker(), liquor.get_category(), liquor.get_sub_category(),
+                                liquor.get_sub_sub_category(), liquor.get_sub_sub_sub_category(), liquor.get_cost(), liquor.get_volume(), 
+                                liquor.get_abv(), liquor.get_aroma(), liquor.get_color(), "Null", liquor.get_origin(), liquor.get_region(), "1"])
 
     def clear_tree(self):
         for i in reversed(range(self._liquor_view.topLevelItemCount())):
