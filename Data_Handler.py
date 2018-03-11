@@ -16,7 +16,36 @@ class Data_Handler():
         self._coolers = pd.read_csv('Alcohol_Data/cooler.csv')
         self._sake= pd.read_csv('Alcohol_Data/sake.csv')
         self._cider= pd.read_csv('Alcohol_Data/cider.csv')
-        
+
+
+    def search_bar(self, string, non_char, number):
+        print('SEARCHING...')
+        temp_df = pd.read_csv('Alcohol_Data/{}.csv'.format(string.lower()))
+        abv = temp_df['Alcohol_By_Volume'].tolist()
+        #self._all_data = (self._all_data.loc[self._all_data['Category'] == string])
+        searched_data = pd.read_csv('Alcohol_Data/searched.csv')
+        print('Checking Fromatting...')
+        #with open(('Alcohol_Data/searched.csv'.format(string.lower())), 'a') as file:
+            
+        #y = pd.read_csv('Alcohol_Data/{}.csv'.format(string.lower()))
+
+        print('Checking Non-Character Values...')
+        for i in range(len(temp_df)):
+            if non_char == '<':
+                # temp_num = str(abv[i])
+                # temp_df = temp_df.loc[temp_df['Alcohol_By_volume'] == temp_num]
+                #self._searched_data = self._all_data.loc[lambda searched_data: searched_data.Alcohol_By_Volume < int(number), :]
+                pass
+            else:
+                # x = str(self._beer.loc[lambda searched_data: searched_data.Alcohol_By_Volume > int(number), :])
+                pass
+            
+        print('List Succesfull')
+        print('Initializing Loop.')
+        for index, item in temp_df.iterrows():
+            yield self.make_object(item, "search_result")
+
+        print("COMPLETE!")
         
     # made a comment
     # Return all beers in new variable
