@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import *
 from collections import OrderedDict
 import webbrowser
 import math
+import os
+import subprocess as sub
 
 
 class LiquorDetails(QWidget):
@@ -197,4 +199,10 @@ class NearMe(QWidget):
             if go:
                 url = 'google.com/maps/search/' + entry.lower() + '/'
                 browser = webbrowser.get('google-chrome')
-                browser.open(url, new=2)
+                if os.name == 'nt':
+                    sub.run(['cmd', '/c', 'start', 'chrome.exe', url])
+                elif os.name == 'posix':
+                    #not sure on this line, can't personally test
+                    sub.run(['chrome', url])
+                    #backup plan
+                    #browser.open(url, new=2)
