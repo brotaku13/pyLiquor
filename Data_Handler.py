@@ -10,12 +10,12 @@ class Data_Handler():
         self._wine = pd.read_csv('Alcohol_Data/wine.csv')
         
         # Get other files for init
-        self._beer = pd.read_csv('Alcohol_Data/beer_spirits.csv')
-        self._spirits = pd.read_csv('Alcohol_Data/beer_spirits.csv')
-        self._liqour = pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
-        self._coolers = pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
-        self._sake= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
-        self._cider= pd.read_csv('Alcohol_Data/liquor_coolers_ciders_data_sake.csv')
+        self._beer = pd.read_csv('Alcohol_Data/beer.csv')
+        self._spirits = pd.read_csv('Alcohol_Data/spirits.csv')
+        self._liqour = pd.read_csv('Alcohol_Data/liquer.csv')
+        self._coolers = pd.read_csv('Alcohol_Data/cooler.csv')
+        self._sake= pd.read_csv('Alcohol_Data/sake.csv')
+        self._cider= pd.read_csv('Alcohol_Data/cider.csv')
         
         
     # made a comment
@@ -51,13 +51,13 @@ class Data_Handler():
     # Doesn't have correct csv format, no data output
     # Liqueur is labled Spirit -- Liqour or other -- Liqour
     def get_liqour(self):
-        self._liqour = (self._liqour.loc[self._liqour["Category"] == "LIQUEUR"])
+        self._liqour = (self._liqour.loc[self._liqour["Category"] == "WINE -- LIQUEUR"])
         for index, item in self._liqour.iterrows():
             yield self.make_object(item, "search_result")
 
     # Sake is labled Spirit -- Sake or other -- Sake
     def get_sake(self):
-        self._sake = (self._sake.loc[self._sake["Category"] == "SAKE"])
+        self._sake = (self._sake.loc[self._sake["Category"] == "WINE -- SAKE"])
         for index, item in self._sake.iterrows():
             yield self.make_object(item, "search_result")
 
