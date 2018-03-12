@@ -28,25 +28,27 @@ class Cabinet(QWidget):
 
     @pyqtSlot()
     def remove_from_cabinet(self):
-        """Removes currently highlighted item from the user's cabinet or decraments if Quantity > 1
+        """Removes currently highlighted item from the user's cabinet or decrements if Quantity > 1
         """
 
         item = self._collection_view.currentItem()
-        with open('Alcohol_Data/cabinet.csv', 'r', newline='') as f:
-            reader = csv.DictReader(f)
-            headers = reader.fieldnames
-            data = list(reader)
-        with open('Alcohol_Data/cabinet.csv', 'w', newline='') as f:
-            writer = csv.DictWriter(f, headers)
-            writer.writeheader()
-            for row in data:
-                if row['ID'] == str(item.get_id()):
-                    if int(row['Quantity']) > 1:
-                        row['Quantity'] = str(int(row['Quantity']) - 1)
+        if item is not None:
+            
+            with open('Alcohol_Data/cabinet.csv', 'r', newline='') as f:
+                reader = csv.DictReader(f)
+                headers = reader.fieldnames
+                data = list(reader)
+            with open('Alcohol_Data/cabinet.csv', 'w', newline='') as f:
+                writer = csv.DictWriter(f, headers)
+                writer.writeheader()
+                for row in data:
+                    if row['ID'] == str(item.get_id()):
+                        if float(row['Quantity']) > 1:
+                            row['Quantity'] = str(float(row['Quantity']) - 1)
+                            writer.writerow(row)
+                    else:
                         writer.writerow(row)
-                else:
-                    writer.writerow(row)
-        self.populate()
+            self.populate()
 
     def update_details(self, current_liquor_item: LiquorViewItem):
         """Update's the details view with the details of the currently selected item

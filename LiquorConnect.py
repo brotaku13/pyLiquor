@@ -9,6 +9,7 @@ import time
 import json
 import csv
 
+
 def get_ids(skus, link, num):
     try:
         driver = webdriver.Chrome()
@@ -111,18 +112,8 @@ def make_csv(skus):
                 print(f"Error: Unable to get data for {skus[i]}.")
                 retry_skus.append(skus[i])
 
-        # uncomment to see all the available keys
-        # for key,value in data.items():
-        #
-        #     if (type(value) == dict):
-        #         print(f"\tStart {value}'s dict: ")
-        #         for key1, value1 in value.items():
-        #             print(f"{key1}: {value1}")
-        #         print(f"\tEnd of {value}'s dict\n")
-        #     else:
-        #         print(f"{key}: {value}")
-
     retry_csv(retry_skus)
+
 
 def retry_csv(retry_skus):
     with open("wine1.csv", "a", newline='') as csvfile:

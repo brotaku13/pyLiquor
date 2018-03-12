@@ -70,7 +70,6 @@ class Data_Handler():
         for index, item in results.iterrows():
             yield self.make_object(item, "search_result")
         
-
     def get_beer(self):
         """Returns all beer entries
         """
