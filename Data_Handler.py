@@ -42,7 +42,35 @@ class Data_Handler():
                             self._all.Region.str.contains(pattern)]
         for index, item in results.iterrows():
             yield self.make_object(item, "search_result")
-    
+
+    def formatted_search(self, search_args: str):
+        """Allows the user to perform a formatted search
+        
+        Arguments:
+            search_args {str} -- Search Argument
+        """
+        args = search_args.split(' ')
+        results = self._all
+        op = args[1]
+        l_value = args[0]
+        try:
+            if l_value == 'abv':
+                if op == '>':
+                    results = results[results.Alcohol_By_Volume > float(args[2])]
+                elif op == '<':
+                    results = results[results.Alcohol_By_Volume < float(args[2])]
+                elif op == '=':
+                    results = results[results.Alcohol_By_Volume == float(args[2])]
+            else:
+                if op == '=':
+                    results = results[results[args[0].title()] == args[2].upper()]
+        except Exception as e:
+            print(str(e))
+        
+        for index, item in results.iterrows():
+            yield self.make_object(item, "search_result")
+        
+
     def get_beer(self):
         """Returns all beer entries
         """

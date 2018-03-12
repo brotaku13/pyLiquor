@@ -81,8 +81,12 @@ class Results(QWidget):
             for entry in data_handler.get_sake():
                 self._liquor_view.addTopLevelItem(entry)
         else:
-            for entry in data_handler.search(search_args):
-                self._liquor_view.addTopLevelItem(entry)
+            if len(search_args.split(' ')) > 1:
+                for entry in data_handler.formatted_search(search_args):
+                    self._liquor_view.addTopLevelItem(entry)
+            else:
+                for entry in data_handler.search(search_args):
+                    self._liquor_view.addTopLevelItem(entry)
                 
     @pyqtSlot()
     def add_item_to_cabinet(self):
