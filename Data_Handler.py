@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import csv
+import re
 from Widgets.Search_Widgets.LiquorViewItem import LiquorViewItem
 
 
@@ -16,41 +17,19 @@ class Data_Handler():
         self._coolers = pd.read_csv('Alcohol_Data/cooler.csv')
         self._sake= pd.read_csv('Alcohol_Data/sake.csv')
         self._cider= pd.read_csv('Alcohol_Data/cider.csv')
-
-
-    def search_bar(self, string, non_char, number):
-        print('SEARCHING...')
-        temp_df = pd.read_csv('Alcohol_Data/{}.csv'.format(string.lower()))
-        abv = temp_df['Alcohol_By_Volume'].tolist()
-        #self._all_data = (self._all_data.loc[self._all_data['Category'] == string])
-        searched_data = pd.read_csv('Alcohol_Data/searched.csv')
-        print('Checking Fromatting...')
-        #with open(('Alcohol_Data/searched.csv'.format(string.lower())), 'a') as file:
-            
-        #y = pd.read_csv('Alcohol_Data/{}.csv'.format(string.lower()))
-
-        print('Checking Non-Character Values...')
-        for i in range(len(temp_df)):
-            if non_char == '<':
-                # temp_num = str(abv[i])
-                # temp_df = temp_df.loc[temp_df['Alcohol_By_volume'] == temp_num]
-                #self._searched_data = self._all_data.loc[lambda searched_data: searched_data.Alcohol_By_Volume < int(number), :]
-                pass
-            else:
-                # x = str(self._beer.loc[lambda searched_data: searched_data.Alcohol_By_Volume > int(number), :])
-                pass
-            
-        print('List Succesfull')
-        print('Initializing Loop.')
-        for index, item in temp_df.iterrows():
-            yield self.make_object(item, "search_result")
-
-        print("COMPLETE!")
+        self._all = pd.read_csv('Alcohol_Data/all_data.csv')
         
-    # made a comment
-    # Return all beers in new variable
-    # self._temp['Category'] gives you beers/spirits need a way ti filter out spirits
-    # More efficient to sort if called upon.
+    def search(self, search_args: str):
+        pattern = r'{}'.format(search_args.upper())
+        results = self._all[self._all.Name.str.contains(pattern) | 
+                            self._all.Maker.str.contains(pattern) | 
+                            self._all.Category.str.contains(pattern) | 
+                            self._all.Sub_Category.str.contains(pattern) |
+                            self._all.Origin.str.contains(pattern) | 
+                            self._all.Region.str.contains(pattern)]
+        for index, item in results.iterrows():
+            yield self.make_object(item, "search_result")
+    
     def get_beer(self):
         self._beer = (self._beer.loc[self._beer["Category"] == "BEER"])
         for index, item in self._beer.iterrows():

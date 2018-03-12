@@ -1,6 +1,8 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+import pandas as pd
+import csv
 
 from Widgets.LiquorDetails import CabinetLiquorDetails
 from Widgets.LiquorView import LiquorView
@@ -12,13 +14,31 @@ class Cabinet(QWidget):
     def __init__(self, data_handler, parent=None):
         super(Cabinet, self).__init__(parent)
         self._data_handler = data_handler
-        self._radiobutton_current = QRadioButton("Current")
-        self._radiobutton_all = QRadioButton("All")
         self._collection_view = LiquorView(["Name", "Type", "Quantity"])
         self._collection_view.currentItemChanged.connect(self.update_details)
         self._collection_view.setColumnWidth(0, 325)
         self._details_view = CabinetLiquorDetails()
+        self._details_view.remove_from_cabinet.connect(self.remove_from_cabinet)
         self.define_layout()
+
+    @pyqtSlot()
+    def remove_from_cabinet(self):
+        item = self._collection_view.currentItem()
+        with open('Alcohol_Data/cabinet.csv', 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            headers = reader.fieldnames
+            data = list(reader)
+        with open('Alcohol_Data/cabinet.csv', 'w', newline='') as f:
+            writer = csv.DictWriter(f, headers)
+            writer.writeheader()
+            for row in data:
+                if row['ID'] == str(item.get_id()):
+                    if int(row['Quantity']) > 1:
+                        row['Quantity'] = str(int(row['Quantity']) - 1)
+                        writer.writerow(row)
+                else:
+                    writer.writerow(row)
+        self.populate()
 
     def update_details(self, current_liquor_item: LiquorViewItem):
         if current_liquor_item is not None:
@@ -38,8 +58,6 @@ class Cabinet(QWidget):
         layout_cabinet.setContentsMargins(11, 0, 11, 20)
 
         layout_filter_buttons = QHBoxLayout()
-        layout_filter_buttons.addWidget(self._radiobutton_current)
-        layout_filter_buttons.addWidget(self._radiobutton_all)
         spacer = QSpacerItem(100, 20, QSizePolicy.Expanding, QSizePolicy.Preferred)
         layout_filter_buttons.addItem(spacer)
 

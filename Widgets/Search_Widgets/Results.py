@@ -61,6 +61,10 @@ class Results(QWidget):
         elif search_args == 'sake':
             for entry in data_handler.get_sake():
                 self._liquor_view.addTopLevelItem(entry)
+        else:
+            for entry in data_handler.search(search_args):
+                self._liquor_view.addTopLevelItem(entry)
+                
     @pyqtSlot()
     def add_item_to_cabinet(self):
         file_name = 'Alcohol_Data/cabinet.csv'
