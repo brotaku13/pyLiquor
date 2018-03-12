@@ -9,7 +9,11 @@ import subprocess as sub
 
 
 class LiquorDetails(QWidget):
+    """Displays the details of a currently highlighted item. 
     
+    Arguments:
+        QWidget {QWidget} -- inherits from QWidget
+    """
     add_to_cabinet = pyqtSignal()
     remove_from_cabinet = pyqtSignal()
 
@@ -43,23 +47,51 @@ class LiquorDetails(QWidget):
             label.setFont(font_details)
 
     def near_me(self):
+        """Create's a popup to assist in searching for liquor stores near the user
+        """
+
         self.new_search = NearMe()
         self.new_search.setGeometry(QRect(1100,600,400,200))
         self.new_search.show()
 
     def is_nan(self, x):
+        """Helper function to decide if a particular field in a pandas dataframe is NaN
+        
+        Arguments:
+            x {pandas.series.item} -- The field of a pandas series
+        
+        Returns:
+            bool -- True if the value is NaN and false otherwise
+        """
+
         return isinstance(x, float) and math.isnan(x)
 
     def set_name(self, name):
+        """Sets the name of the alcohol
+        
+        Arguments:
+            name {str} -- name of the alcohol
+        """
+
         self._name.setText(name)
 
     def set_maker(self, maker):
+        """sets the maker value
+        
+        Arguments:
+            maker {str} -- the maker of the alcohol
+        """
+
         if maker != '' and not self.is_nan(maker):
             self._maker.setText(maker)
         else:
             self._maker.setText('')
     
     def set_category(self, *args):
+        """Sets the category of the alcohol
+        *args: a list of category, sub_category, sub_sub_category, and sub_sub_sub_category
+        """
+
         categories = OrderedDict()
         for word in args:
             if not self.is_nan(word) and word.lower() != 'other' and word.lower() != 'none' and word != '':
@@ -107,42 +139,84 @@ class LiquorDetails(QWidget):
         self._category.setText(final_word)
     
     def set_origin(self, origin):
+        """Sets the origin field
+        
+        Arguments:
+            origin {str} -- Origin of the item
+        """
+
         if origin != '' and not self.is_nan(origin):
             self._origin.setText('Origin: {}'.format(origin.title()))
         else:
             self._origin.setText('Origin: N/A')
     
     def set_region(self, region):
+        """sets the region field
+        
+        Arguments:
+            region {str} -- Region of the item
+        """
+
         if region != '' and not self.is_nan(region):
             self._region.setText('Region: {}'.format(region.title()))
         else:
             self._region.setText('Region: N/A')
     
     def set_volume(self, volume):
+        """Sets the Volume field (in ml)
+        
+        Arguments:
+            volume {str} -- The Volume of the item
+        """
+
         if volume != '' and not self.is_nan(volume):
             self._volume.setText('Volume (ml): {:.2f}ml'.format(volume))
         else:
             self._volume.setText('Volume (ml): N/A')
     
     def set_abv(self, abv):
+        """Sets the ABV field
+        
+        Arguments:
+            abv {str} -- Alchol by Volume of the item
+        """
+
         if abv != '' and not self.is_nan(abv):
             self._abv.setText('ABV%: {}'.format(abv))
         else:
             self._abv.setText('ABV%: N/A')
     
     def set_aroma(self, aroma):
+        """Sets the Aroma field, if available
+        
+        Arguments:
+            aroma {str} -- The Aroma of the item
+        """
+
         if aroma != '' and not self.is_nan(aroma):
             self._aroma.setText('Aroma: {}'.format(aroma))
         else:
             self._aroma.setText('Aroma: N/A')
 
     def set_color(self, color):
+        """Sets the color field, if available
+        
+        Arguments:
+            color {str} -- The color of the item
+        """
+
         if color != '' and not self.is_nan(color):
             self._color.setText('Color: {}'.format(color.title()))
         else:
             self._color.setText('Color: N/A')
     
     def update_ui(self, liquor):
+        """Updates text fields with all of the stats of the currently highlighted item
+        
+        Arguments:
+            liquor {LiquorViewItem} -- The currently highlighted LiquorViewItem in the QTreeWidget
+        """
+
         self.set_name(liquor.get_name())
         self.set_maker(liquor.get_maker())
         self.set_category(liquor.get_category(), liquor.get_sub_category(), 
@@ -156,17 +230,28 @@ class LiquorDetails(QWidget):
             
 
 class SearchLiquorDetails(LiquorDetails):
+    """Subclass of LiquorDetails. Designed for the search page
+    
+    Arguments:
+        LiquorDetails {LiquorDetails} -- inherits from LiquorDetails
+    """
+
     def __init__(self):
-        
         self._button_add_to_cabinet = QPushButton("Add to Cabinet")
         self._button_add_to_cabinet.clicked.connect(self.add_selection)
         super(SearchLiquorDetails, self).__init__()
         self.define_layout()
 
     def add_selection(self):
+        """Adds the currently highlighted selection to the user's cabinet
+        """
+
         self.add_to_cabinet.emit()
         
     def define_layout(self):
+        """Defines layout of the search Liquor details
+        """
+
         layout = QVBoxLayout()
         layout.addWidget(self._name)
         for widget in self.labels:
@@ -182,6 +267,12 @@ class SearchLiquorDetails(LiquorDetails):
 
 
 class CabinetLiquorDetails(LiquorDetails):
+    """subclass of LiquorDetails designed for the cabinet page
+    
+    Arguments:
+        LiquorDetails {LiquorDetails} -- Inherits from LiquorDetails
+    """
+
     def __init__(self):
         super(CabinetLiquorDetails, self).__init__()
         self._button_remove_from_cabinet = QPushButton("Remove from Cabinet")
@@ -189,9 +280,15 @@ class CabinetLiquorDetails(LiquorDetails):
         self.define_layout()
 
     def remove_selection(self):
+        """removes currently highlighted selection from the useer's cabinet
+        """
+
         self.remove_from_cabinet.emit()
         
     def define_layout(self):
+        """Defines layout
+        """
+
         layout = QVBoxLayout()
         layout.addWidget(self._name)
         for widget in self.labels:
@@ -206,11 +303,20 @@ class CabinetLiquorDetails(LiquorDetails):
         self.setLayout(layout)
 
 class NearMe(QWidget):
+    """A small popup window to assist in searching for liquor locations near the user
+    
+    Arguments:
+        QWidget {QWidget} -- Inherits from QWidget
+    """
+
     def __init__(self, parent=None):
         super(NearMe, self).__init__(parent)
         self.define_layout()
 
     def define_layout(self):
+        """Defines layout
+        """
+
         self.pop_up = QVBoxLayout()
         self.drop_down = QComboBox()
         self.text = QLabel("What would you like to search for?")
@@ -224,6 +330,9 @@ class NearMe(QWidget):
         self.setWindowTitle("Search Near Me")
         
     def search_maps(self):
+        """Opens a browser window with the results of the search, typically opens to a google-maps page
+        """
+
         go = True
         entry = self.drop_down.currentText()
         if entry == "Other":

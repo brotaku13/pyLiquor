@@ -6,11 +6,17 @@ from Widgets.Search_Widgets.LiquorViewItem import LiquorViewItem
 
 
 class Data_Handler():
+    """Qt5 implements an MV design structure, not MVC. The various app widgets in our project all assist with the View portion of MV
+    Data_Handler is the only object that touches and interacts with the data we have in our CSV files. it is responsible for filtering, 
+    searching, and feeding information to the widgets throughout the app. 
+
+    Implemented as a singleton
+    """
+
+
     def __init__(self):
         # Wine is the best preview
         self._wine = pd.read_csv('Alcohol_Data/wine.csv')
-        
-        # Get other files for init
         self._beer = pd.read_csv('Alcohol_Data/beer.csv')
         self._spirits = pd.read_csv('Alcohol_Data/spirits.csv')
         self._liqour = pd.read_csv('Alcohol_Data/liquer.csv')
@@ -20,6 +26,13 @@ class Data_Handler():
         self._all = pd.read_csv('Alcohol_Data/all_data.csv')
         
     def search(self, search_args: str):
+        """Performs the filtering of the data necessary for a search. returns 
+        only results matching the criteria provided by the search_args
+        
+        Arguments:
+            search_args {str} -- The arguments given by the user
+        """
+
         pattern = r'{}'.format(search_args.upper())
         results = self._all[self._all.Name.str.contains(pattern) | 
                             self._all.Maker.str.contains(pattern) | 
@@ -31,50 +44,82 @@ class Data_Handler():
             yield self.make_object(item, "search_result")
     
     def get_beer(self):
+        """Returns all beer entries
+        """
+
         self._beer = (self._beer.loc[self._beer["Category"] == "BEER"])
         for index, item in self._beer.iterrows():
             yield self.make_object(item, "search_result")
 
     def get_spirits(self):
+        """returns all spirits entries
+        """
+
         self._spirits = (self._spirits.loc[self._spirits["Category"] == "SPIRITS"])
         for index, item in self._spirits.iterrows():
             yield self.make_object(item, "search_result")
             
     def get_coolers(self):
+        """returns all coolers entries
+        """
+
         self._coolers = (self._coolers.loc[self._coolers["Category"] == "COOLER"])
         for index, item in self._coolers.iterrows():
             yield self.make_object(item, "search_result")
 
     def get_cider(self):
+        """returns all cider entries
+        """
+
         self._cider = (self._cider.loc[self._cider["Category"] == "CIDER"])
         for index, item in self._cider.iterrows():
             yield self.make_object(item, "search_result")
 
-    # Can format here instead of other place it was used at.
-    # It will print faster and suggested.
     def get_wine(self):
+        """returns all wine entries
+        """
+
         for index, item in self._wine.iterrows():
             yield self.make_object(item, "search_result")
 
     # Doesn't have correct csv format, no data output
     # Liqueur is labled Spirit -- Liqour or other -- Liqour
     def get_liqour(self):
+        """returns all Liqeur entries
+        """
+
         self._liqour = (self._liqour.loc[self._liqour["Category"] == "WINE -- LIQUEUR"])
         for index, item in self._liqour.iterrows():
             yield self.make_object(item, "search_result")
 
     # Sake is labled Spirit -- Sake or other -- Sake
     def get_sake(self):
+        """returns all sake entries
+        """
+
         self._sake = (self._sake.loc[self._sake["Category"] == "WINE -- SAKE"])
         for index, item in self._sake.iterrows():
             yield self.make_object(item, "search_result")
 
     def get_cabinet(self):
+        """returns all cabinet entries
+        """
+
         self._cabinet = pd.read_csv('Alcohol_Data/cabinet.csv')
         for index, item in self._cabinet.iterrows():
             yield self.make_object(item, "cabinet")
         
     def make_object(self, entry, entry_type: str):
+        """Factory method for creating LiquorViewItem objects
+        
+        Arguments:
+            entry {Pandas.Series} -- A row from a pandas dataframe
+            entry_type {str} -- defines which text columns to fill
+        
+        Returns:
+            [type] -- [description]
+        """
+
         additional_fields = []
         if entry_type == "search_result":
             additional_fields = ["sub_category"]

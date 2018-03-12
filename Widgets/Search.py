@@ -7,6 +7,11 @@ from Widgets.Search_Widgets.Results import Results
 
 
 class Search(QWidget):
+    """Container class for the search widgets
+    
+    Arguments:
+        QWidget {QWidget} -- inherits from QWidget
+    """
 
     def __init__(self, data_handler, parent=None):
         super(Search, self).__init__(parent)
@@ -25,15 +30,27 @@ class Search(QWidget):
 
     @pyqtSlot(str)
     def search(self, search_arg):
+        """Performs the search
+        
+        Arguments:
+            search_arg {str} -- the search arguments given by the user
+        """
+
         self._search_results.populate(self._data_handler, search_arg)
         self._search_apps.setCurrentIndex(1)
         print(search_arg)
 
     @pyqtSlot()
     def back_to_home(self):
+        """back button functionality-goes back to home of search page
+        """
+
         self._search_apps.setCurrentIndex(0)
 
     def define_layout(self):
+        """defines the layout
+        """
+
         layout = QHBoxLayout()
         layout.addWidget(self._search_apps)
         layout.setContentsMargins(11, 0, 11, 20)

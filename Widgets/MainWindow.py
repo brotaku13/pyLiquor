@@ -9,6 +9,11 @@ import sys
 
 
 class MainWindow(QWidget):
+    """Define's the main window of the application
+    
+    Arguments:
+        QWidget {QWidget} -- Inherits from QWidget
+    """
 
     def __init__(self, data_handler, parent=None):
         super(QWidget, self).__init__(parent)
@@ -49,7 +54,8 @@ class MainWindow(QWidget):
         self.define_layout()
 
     def define_layout(self):
-
+        """Defines layout of PyLiquor
+        """
         grid = QGridLayout()
         grid.setContentsMargins(11, 11, 0, 0)
 
@@ -67,12 +73,15 @@ class MainWindow(QWidget):
         self.setLayout(grid)
 
     def switch_page(self, index):
+        """Switches the index of the stacked widget
+        
+        Arguments:
+            index {int} -- index to switch to
+        """
+
         if index == 0:
             self._cabinet_page.populate()
         self._app_stack.setCurrentIndex(index)
+        if index == 1:
+            self._search.back_to_home()
 
-
-# app = QApplication(sys.argv)
-# mainWindow = MainWindow()
-# mainWindow.show()
-# sys.exit(app.exec_())

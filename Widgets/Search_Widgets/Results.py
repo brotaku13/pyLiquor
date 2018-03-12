@@ -12,7 +12,12 @@ import csv
 
 
 class Results(QWidget):
+    """Results page for the search widget
     
+    Arguments:
+        QWidget {QWidget} -- Inherits from QWidget
+    """
+
     back_to_search = pyqtSignal()
 
     def __init__(self, parent=None):
@@ -31,14 +36,28 @@ class Results(QWidget):
         self.define_layout()
 
     def on_back_clicked(self):
-        #self.clear_tree()
+        """Emits the back_to_search signal when the back button is clicked
+        """
         self.back_to_search.emit()
 
     def update_details(self, current_liquor_item: LiquorViewItem):
+        """Updates the details in the liquor details view. 
+        
+        Arguments:
+            current_liquor_item {LiquorViewItem} -- The item that is currently highlighted in the QTreeView
+        """
+
         if current_liquor_item is not None:
             self._details_view.update_ui(current_liquor_item)
 
     def populate(self, data_handler, search_args):
+        """Populates the QTreeView with items from the CSV's that match the user's criteria
+        
+        Arguments:
+            data_handler {Data_Handler} -- The data handler singleton responsible for handling the interface betwen the UI and the CSV data
+            search_args {str} -- The arguments to be searched for
+        """
+
         self.clear_tree()
         if search_args == 'wine':
             for entry in data_handler.get_wine():
@@ -67,6 +86,8 @@ class Results(QWidget):
                 
     @pyqtSlot()
     def add_item_to_cabinet(self):
+        """Adds the currently highlighted item to the user's cabinet and updates the cabinet list
+        """
         file_name = 'Alcohol_Data/cabinet.csv'
         liquor = self._liquor_view.currentItem()
         found = False
@@ -107,10 +128,16 @@ class Results(QWidget):
                                 liquor.get_abv(), liquor.get_aroma(), liquor.get_color(), "Null", liquor.get_origin(), liquor.get_region(), "1"])
 
     def clear_tree(self):
+        """Clears the current tree's items
+        """
+
         for i in reversed(range(self._liquor_view.topLevelItemCount())):
             self._liquor_view.takeTopLevelItem(i) 
 
     def define_layout(self):
+        """Defines the Widget's layout
+        """
+
         left = QVBoxLayout()
         button_bar = QHBoxLayout()
         button_bar.addWidget(self._button_back)
@@ -125,5 +152,3 @@ class Results(QWidget):
         layout.addWidget(self._details_view)
         layout.setContentsMargins(0, 0, 0, 11)
         self.setLayout(layout)
-
-

@@ -4,6 +4,12 @@ from PyQt5.QtWidgets import *
 
 
 class LiquorViewItem(QTreeWidgetItem):
+    """"Alcohol" class of which is displayed in the LiquorView item
+    
+    Arguments:
+        QTreeWidgetItem {QTreeWidgetItem} -- Inherits from QTreeViewItem
+    """
+
     def __init__(self, ID: int, name: str, maker: str, category: str, sub_category: str, 
                 sub_sub_category: str, sub_sub_sub_category: str, cost: float,
                 volume: float, alcohol_by_volume: float, aroma: str, color: str, 

@@ -5,7 +5,11 @@ from pathlib import Path
 
 
 class Home(QWidget):
-
+    """Widget for the search pages home page. displays buttons as well as a search bar to the user
+    
+    Arguments:
+        QWidget {QWidget} -- Inherits from QWidget
+    """
     search_action = pyqtSignal(str)
 
     def __init__(self, parent=None):
@@ -72,10 +76,16 @@ class Home(QWidget):
 
     # emit signal
     def on_choose_action(self, search_args):
+        """Emit signal on button click or when the focus is on the search bar and the user presses the enter key
+        
+        Arguments:
+            search_args {Str} -- The arguments to search for
+        """
         self.search_action.emit(search_args)
 
     def define_layout(self):
-
+        """Defines the layout of the widget
+        """
         browse_layout = QVBoxLayout()
         browse_layout.setContentsMargins(20, 0, 20, 0)
 
@@ -96,11 +106,7 @@ class Home(QWidget):
         search_bar = QHBoxLayout()
         search_bar.addWidget(self._search_box)
 
-
         browse_layout.addLayout(search_bar)
         browse_layout.addLayout(grid)
 
         self.setLayout(browse_layout)
-
-
-

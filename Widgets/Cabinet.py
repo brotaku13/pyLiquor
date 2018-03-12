@@ -10,6 +10,11 @@ from Widgets.Search_Widgets import LiquorViewItem
 
 
 class Cabinet(QWidget):
+    """Display's the contents of the user's cabinet as well as any details about the contents
+    
+    Arguments:
+        QWidget {QWidget} -- Inherits from QWidget class
+    """
 
     def __init__(self, data_handler, parent=None):
         super(Cabinet, self).__init__(parent)
@@ -23,6 +28,9 @@ class Cabinet(QWidget):
 
     @pyqtSlot()
     def remove_from_cabinet(self):
+        """Removes currently highlighted item from the user's cabinet or decraments if Quantity > 1
+        """
+
         item = self._collection_view.currentItem()
         with open('Alcohol_Data/cabinet.csv', 'r', newline='') as f:
             reader = csv.DictReader(f)
@@ -41,19 +49,34 @@ class Cabinet(QWidget):
         self.populate()
 
     def update_details(self, current_liquor_item: LiquorViewItem):
+        """Update's the details view with the details of the currently selected item
+        
+        Arguments:
+            current_liquor_item {LiquorViewItem} -- The currently highlighted item from the QTreeWidget
+        """
+
         if current_liquor_item is not None:
             self._details_view.update_ui(current_liquor_item)
 
     def populate(self):
+        """Populates the QTreeView with items from the user's cabinet CSV
+        """
+
         self.clear_tree()
         for entry in self._data_handler.get_cabinet():
             self._collection_view.addTopLevelItem(entry)
     
     def clear_tree(self):
+        """clears the QTreeWidget of items. Used when updating the contents
+        """
+
         for i in reversed(range(self._collection_view.topLevelItemCount())):
             self._collection_view.takeTopLevelItem(i) 
 
     def define_layout(self):
+        """Define's alyout of widget
+        """
+
         layout_cabinet = QHBoxLayout()
         layout_cabinet.setContentsMargins(11, 0, 11, 20)
 
@@ -70,7 +93,3 @@ class Cabinet(QWidget):
         layout_cabinet.addWidget(self._details_view)
 
         self.setLayout(layout_cabinet)
-
-
-
-

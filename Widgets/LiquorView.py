@@ -4,6 +4,11 @@ from PyQt5.QtWidgets import *
 
 
 class LiquorView(QTreeWidget):
+    """Displays the liquor in a list format
+    
+    Arguments:
+        QTreeWidget {QTreeWidget} -- Inherits from QTreeWidget
+    """
 
     def __init__(self, categories, parent=None):
         super(LiquorView, self).__init__(parent)
@@ -14,6 +19,5 @@ class LiquorView(QTreeWidget):
         self.setSortingEnabled(True)
         self.sortByColumn(0, Qt.AscendingOrder)
         self.setHeaderLabels(categories)
-
         table_size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         self.setSizePolicy(table_size_policy)
